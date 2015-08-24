@@ -8,15 +8,11 @@ namespace states {
 		isShot: boolean;
 		initialVelocityX: number;
 		initialVelocityY: number;
-		//checkWorldBounds: boolean;
 	}
 
 	export class Main extends Phaser.State {
 		private numCols: number = 10;
 		private numRows: number = 4;
-		private paddleVelX: number;
-		private prevX: number;
-		private paddleHalf: number;
 
 		remainingLives: number = 1;
 		totalPoints: number = 0;
@@ -32,8 +28,8 @@ namespace states {
 		sfxHitPaddle: Phaser.Sound;
 		bgmMusic: Phaser.Sound;
 
-		isLeftDown: boolean;// = this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT);
-		isRightDown: boolean;// = this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT);
+		// isLeftDown: boolean;// = this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT);
+		// isRightDown: boolean;// = this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT);
 
 		bricks: Phaser.Group;
 
@@ -51,18 +47,7 @@ namespace states {
 			var h = this.game.world.height;
 			this.bkg = this.game.add.tileSprite(0, 0, w, h, images.BACKGROUND_BLUE)
 
-			//Paddle
-			this.paddleVelX = 500 / 1000;
-			this.prevX = this.game.input.x;
-
-			this.paddle = this.game.add.sprite(0, 0, images.PADDLE);
-			this.game.physics.arcade.enable(this.paddle);
-			this.paddle.anchor.setTo(0.5, 1);
-			this.paddleHalf = this.paddle.width / 2;
-
-			var bodyPaddle = <Phaser.Physics.Arcade.Body>this.paddle.body;
-			bodyPaddle.enable = true;
-			bodyPaddle.immovable = true;
+			this.paddle = this.game.add.existing(new objects.Paddle(this.game,0,0))
 
 			//Ball
 			this.ball = <IBallSprite>this.game.add.sprite(0, 0, images.BALL);
@@ -192,25 +177,6 @@ namespace states {
 		update() {
 			this.game.physics.arcade.collide(this.ball, this.paddle, this.hitPaddle, null, this);
 			this.game.physics.arcade.collide(this.ball, this.bricks, this.removeBrick, null, this);
-
-			this.isLeftDown = this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT);
-			this.isRightDown = this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT);
-
-			if (this.prevX != this.game.input.x) {
-				this.paddle.x = this.game.input.x;
-			} else if (this.isRightDown && !this.isLeftDown) {
-				this.paddle.x += this.paddleVelX * this.game.time.physicsElapsedMS;
-			} else if (this.isLeftDown && !this.isRightDown) {
-				this.paddle.x -= this.paddleVelX * this.game.time.physicsElapsedMS;
-			}
-			this.prevX = this.game.input.x;
-
-			if (this.paddle.x - this.paddleHalf < 0) {
-				this.paddle.x = 0 + this.paddleHalf;
-			}
-			if (this.paddle.x + this.paddleHalf > this.game.world.width) {
-				this.paddle.x = this.game.world.width - this.paddleHalf;
-			}
 
 			if (this.ball.isShot === false) {
 				this.ball.x = this.paddle.x;
