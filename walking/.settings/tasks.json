@@ -1,0 +1,13 @@
+{
+    "version": "0.1.0",
+    "command": "tsc",
+    "isShellCommand": true,
+    "args": [
+        "app.ts"
+    ],
+    "problemMatcher": [
+        "$lessCompile",
+        "$tsc",
+        "$jshint"
+    ]
+}
