@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 /// <reference path="../../typings/app.d.ts"/>
 
-namespace states{
+namespace _.states{
 
 	export function goToMain(){
 		bb.game.state.start(states.STATES_MAIN);

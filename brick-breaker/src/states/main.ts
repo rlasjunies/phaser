@@ -1,14 +1,8 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 /// <reference path="../../typings/app.d.ts"/>
 
-namespace states {
+namespace _.states {
 	export const STATES_MAIN: string = "mainState";
-
-	export interface IBallSprite extends Phaser.Sprite {
-		isShot: boolean;
-		initialVelocityX: number;
-		initialVelocityY: number;
-	}
 
 	export class Main extends Phaser.State {
 		private numCols: number = 10;
@@ -17,20 +11,13 @@ namespace states {
 		remainingLives: number = 1;
 		totalPoints: number = 0;
 
-		lives: Phaser.Text;
-		points: Phaser.Text;
-
+		//lives: Phaser.Text;
+		//points: Phaser.Text;
+		scoringPanel: objects.ScoringPanel;
+		
 		bkg: Phaser.TileSprite;
-		paddle: Phaser.Sprite;
-		ball: IBallSprite;
-
-		sfxHitBrick: Phaser.Sound;
-		sfxHitPaddle: Phaser.Sound;
-		bgmMusic: Phaser.Sound;
-
-		// isLeftDown: boolean;// = this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT);
-		// isRightDown: boolean;// = this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT);
-
+		paddle: objects.Paddle;
+		ball: objects.Ball;
 		bricks: Phaser.Group;
 
 		constructor() {
@@ -41,55 +28,22 @@ namespace states {
 			this.game.physics.startSystem(Phaser.Physics.ARCADE);
 			this.game.physics.arcade.checkCollision.down = false;
 
-
 			//TileSprite
 			var w = this.game.world.width;
 			var h = this.game.world.height;
 			this.bkg = this.game.add.tileSprite(0, 0, w, h, images.BACKGROUND_BLUE)
 
+			//Paddle
 			this.paddle = this.game.add.existing(new objects.Paddle(this.game,0,0))
 
 			//Ball
-			this.ball = <IBallSprite>this.game.add.sprite(0, 0, images.BALL);
-			this.game.physics.arcade.enable(this.ball);
-			var bodyBall = <Phaser.Physics.Arcade.Body>this.ball.body;
-			bodyBall.enable = true;
-			bodyBall.bounce.set(1);
-			bodyBall.collideWorldBounds = true;
-
-			this.ball.isShot = false;
-			this.ball.initialVelocityX = 200;
-			this.ball.initialVelocityY = -300
-			this.ball.checkWorldBounds = true;
-			this.ball.events.onOutOfBounds.add(this.loseLife, this);
-
+			this.ball = this.game.add.existing(new objects.Ball(this.game, 0,0));
+			this.ball.evtOutOfBounds.add(this.loseLife, this);
+			
 			this.resetPaddle();
 
-			//Black line
-			h = this.paddle.height;
-			var blackLine = this.game.add.tileSprite(0, 0, w, h, images.BACKGROUND_BLACK)
-			blackLine.anchor.set(0, 1);
-			blackLine.y = this.game.world.height;
-			
-			//Text
-			this.lives = this.game.add.text(0, 0, `${constant.LIVES}${this.remainingLives}`, {});
-			this.lives.fontSize = 18;
-			this.lives.fill = "#ffffff";
-			this.lives.align = "left";
-			this.lives.font = "sans-serif";
-			this.lives.anchor.set(0, 1);
-			this.lives.y = this.game.world.height;
-
-			var txtConfig = {
-				font: "18px sans-serif",
-				fill: "#ffffff",
-				align: "right"
-			}
-			this.points = this.game.add.text(0, 0, this.totalPoints + constant.POINTS, txtConfig);
-			this.points.anchor.set(1);
-			this.points.x = this.game.world.width;
-			this.points.y = this.game.world.height;
-
+			//Scoring Panel definition			
+			this.scoringPanel = new objects.ScoringPanel(this.game, 1);
 
 			this.bricks = this.game.add.group();
 			let brickImage = [
@@ -113,69 +67,37 @@ namespace states {
 				}
 			}
 
-			this.game.input.onDown.add(this.shootBall, this);
+			this.game.input.onDown.add(this.ball.shootBall, this);
 
 			//Sounds
-			this.sfxHitBrick = this.game.add.audio(sounds.HIT_BRICK);
-			this.sfxHitBrick.volume = 1;
-			this.sfxHitPaddle = this.game.add.audio(sounds.HIT_PADDLE);
-			this.sfxHitPaddle.volume = 1
-			this.bgmMusic = this.game.add.audio(sounds.BACKGROUND);
-			this.bgmMusic.volume = 1;
-
-			//this.bgmMusic.loop = true;
-			//this.bgmMusic.play();
+			sounds.init();
 		}
 
-		removeBrick(ball: IBallSprite, brick: Phaser.Sprite) {
+		removeBrick(ball: objects.Ball, brick: Phaser.Sprite) {
 			brick.kill();
 			this.totalPoints += 10;
-			this.points.text = this.totalPoints + constant.POINTS;
-			this.sfxHitBrick.play();
-		}
-
-		hitPaddle(ball: IBallSprite, paddle: Phaser.Sprite) {
-			this.sfxHitPaddle.play();
+			//TODO this.points.text = this.totalPoints + constant.POINTS;
+			bb.score.hitBrick();
+			sounds.hitBrick();
 		}
 
 		goToOver(){
-			this.bgmMusic.stop();
+			sounds.backgroundStop();
 			this.game.state.start(states.STATES_GAME_OVER);	
 		}
 		
-		shootBall() {
-			if (this.ball.isShot) {
-				return;
-			}
-
-			let velX = this.ball.initialVelocityX;
-			let velY = this.ball.initialVelocityY;
-			let rand = Math.floor(Math.random() * 2);
-
-			if (rand % 2 === 0) {
-				velX *= -1;
-			}
-
-			this.ball.isShot = true;
-
-			let state = this.game.state.getCurrentState();
-			var body = <Phaser.Physics.Arcade.Body>this.ball.body;
-			body.velocity.set(velX, velY);
-
-			this.sfxHitPaddle.play();
-		}
-
 		loseLife() {
 			this.resetPaddle();
 			this.remainingLives--;
 			if ( this.remainingLives <= 0){
 				this.goToOver();
 			}
-			this.lives.text = constant.LIVES + this.remainingLives;
+			//TODO this.lives.text = constant.LIVES + this.remainingLives;
+			bb.score.loseLife();
 		}
 
 		update() {
-			this.game.physics.arcade.collide(this.ball, this.paddle, this.hitPaddle, null, this);
+			this.game.physics.arcade.collide(this.ball, this.paddle, this.ball.hitPaddle, null, this);
 			this.game.physics.arcade.collide(this.ball, this.bricks, this.removeBrick, null, this);
 
 			if (this.ball.isShot === false) {
@@ -183,7 +105,7 @@ namespace states {
 			}
 
 			if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-				this.shootBall();
+				this.ball.shootBall();
 			}
 		}
 

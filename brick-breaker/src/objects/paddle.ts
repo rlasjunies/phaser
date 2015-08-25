@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 /// <reference path="../../typings/app.d.ts"/>
 
-namespace objects{
+namespace _.objects{
 
 	export class Paddle extends Phaser.Sprite{
 		private rightArrow: Phaser.Key;

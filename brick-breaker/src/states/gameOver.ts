@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 /// <reference path="../../typings/app.d.ts"/>
 
-namespace states {
+namespace _.states {
 
 	export const STATES_GAME_OVER = "gameOver";
 
