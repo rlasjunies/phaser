@@ -130,10 +130,14 @@ var _;
         var Paddle = (function (_super) {
             __extends(Paddle, _super);
             function Paddle() {
+                _super.call(this, bb.game, 0, 0, images.PADDLE, 0);
+                this.touchOldX = undefined;
+                this.touchNewX = undefined;
+                this.touchActive = false;
+                this.touchMove = 0;
                 this.game = bb.game;
                 this.paddleVelX = 500 / 1000;
                 this.prevX = this.game.input.x;
-                _super.call(this, bb.game, 0, 0, images.PADDLE, 0);
                 this.anchor.set(0.5, 1.0);
                 this.paddleHalf = this.width / 2;
                 this.game.physics.arcade.enable(this);
@@ -154,6 +158,18 @@ var _;
                     this.x -= this.paddleVelX * this.game.time.physicsElapsedMS;
                 }
                 this.prevX = this.game.input.x;
+                // if ( bb.game.device.touch && this.touchActive){
+                // 	this.touchOldX = this.touchNewX;
+                // 	this.touchNewX = bb.game.input.x;
+                // 	this.touchMove = 0;
+                // 	if ( this.touchOldX != undefined && this.touchNewX !=undefined){
+                // 		this.touchMove = this.touchNewX - this.touchOldX;
+                // 	}
+                // 	this.x += this.touchMove;
+                // 	
+                // 	//console.log("myTouchMove:" + this.touchMove);
+                // 	//console.log("pixi:" + this.touchmove(null))
+                // }
                 if (this.x - this.paddleHalf < 0) {
                     this.x = 0 + this.paddleHalf;
                 }
@@ -428,8 +444,6 @@ var _;
                 _super.call(this);
             }
             Intro.prototype.preload = function () {
-                //bb.game.load.image( images.PROGRESS_VOID, "img/progress_void.png");
-                bb.game.load.image(images.PROGRESS_FULL, "img/progress_full.png");
                 images.loadImages();
                 _.sounds.loadSounds();
             };
@@ -519,6 +533,11 @@ var _;
             _.states.loadStates();
         };
         Game.prototype.create = function () {
+            this.game.scale.pageAlignHorizontally = true;
+            if (!this.game.device.desktop) {
+                this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+            }
+            this.game.scale.refresh();
         };
         return Game;
     })();

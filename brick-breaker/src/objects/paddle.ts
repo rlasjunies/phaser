@@ -13,12 +13,17 @@ namespace _.objects{
 		private isLeftDown: boolean;
 		private isRightDown: boolean;
 
+		private touchOldX:number = undefined;
+		private touchNewX: number = undefined;
+		private touchActive: boolean = false;
+		private touchMove: number = 0;
+
 		constructor(){
+			super(bb.game,0,0, images.PADDLE,0);
 			this.game = bb.game;
 
 			this.paddleVelX = 500 / 1000;
 			this.prevX = this.game.input.x;
-			super(bb.game,0,0, images.PADDLE,0);
 
 			this.anchor.set(0.5, 1.0);
 			this.paddleHalf = this.width / 2;
@@ -41,6 +46,20 @@ namespace _.objects{
 				this.x -= this.paddleVelX * this.game.time.physicsElapsedMS;
 			}
 			this.prevX = this.game.input.x;
+
+			// if ( bb.game.device.touch && this.touchActive){
+			// 	this.touchOldX = this.touchNewX;
+			// 	this.touchNewX = bb.game.input.x;
+			// 	this.touchMove = 0;
+			// 	if ( this.touchOldX != undefined && this.touchNewX !=undefined){
+			// 		this.touchMove = this.touchNewX - this.touchOldX;
+			// 	}
+			// 	this.x += this.touchMove;
+			// 	
+			// 	//console.log("myTouchMove:" + this.touchMove);
+			// 	//console.log("pixi:" + this.touchmove(null))
+			// }
+
 
 			if (this.x - this.paddleHalf < 0) {
 				this.x = 0 + this.paddleHalf;

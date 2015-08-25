@@ -19,6 +19,11 @@ namespace _{
       }
       
       create(){        
+        this.game.scale.pageAlignHorizontally=true;
+        if( !this.game.device.desktop){
+          this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        }
+        this.game.scale.refresh();
       }
   }
 }
