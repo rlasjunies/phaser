@@ -14,7 +14,10 @@ namespace _.states{
 		}
 		
 		preload(){
-	      images.loadImages();
+	      //bb.game.load.image( images.PROGRESS_VOID, "img/progress_void.png");
+	      //bb.game.load.image(images.PROGRESS_FULL, "img/progress_full.png");
+		  
+		  images.loadImages();
 	      sounds.loadSounds();
 		}
 		

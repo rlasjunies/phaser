@@ -14,6 +14,8 @@ namespace images {
 	export const LOGO = "logo"; 
 	export const START = "start"; 
 	export const BACK = "back"; 
+	export const PROGRESS_VOID = "progresVoid";
+	export const PRGRESS_FULL = "progressFull";
 	
 	export function loadImages() {
 		bb.game.load.image(PADDLE, 'img/paddle.png');

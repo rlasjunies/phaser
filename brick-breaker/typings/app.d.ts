@@ -8,6 +8,8 @@
 /// <reference path="../src/objects/paddle.ts" />
 /// <reference path="../src/objects/ball.ts" />
 /// <reference path="../src/objects/scoringZone.ts" />
+/// <reference path="../src/objects/bricks.ts" />
+/// <reference path="../src/objects/background.ts" />
 
 /// <reference path="../src/states/states.ts" />
 /// <reference path="../src/states/main.ts" />

@@ -13,12 +13,12 @@ namespace _.objects{
 		private isLeftDown: boolean;
 		private isRightDown: boolean;
 
-		constructor(game: Phaser.Game, x:number, y:number){
-			this.game = game;
+		constructor(){
+			this.game = bb.game;
 
 			this.paddleVelX = 500 / 1000;
 			this.prevX = this.game.input.x;
-			super(game,x,y, images.PADDLE,0);
+			super(bb.game,0,0, images.PADDLE,0);
 
 			this.anchor.set(0.5, 1.0);
 			this.paddleHalf = this.width / 2;
@@ -48,6 +48,11 @@ namespace _.objects{
 			if (this.x + this.paddleHalf > this.game.world.width) {
 				this.x = this.game.world.width - this.paddleHalf;
 			}
+		}
+		
+		resetPaddle(){
+			this.x = this.game.world.centerX;
+			this.y = this.game.world.height - this.height;
 		}
 	}
 }

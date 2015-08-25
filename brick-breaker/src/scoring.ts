@@ -3,17 +3,22 @@
 namespace _ {
 	export class Score {
 		evtScoreChanged: Phaser.Signal;
-
+		evtLifeEnded: Phaser.Signal;
+		
 		remainingLives: number;
 		totalPoints: number = 0;
 		initialRemainingLives: number = 1;
 		constructor() {
 			this.evtScoreChanged = new Phaser.Signal();
+			this.evtLifeEnded = new Phaser.Signal();
 			this.reinitialize();
 		}
 
-		loseLife() {
+		looseLife() {
 			this.remainingLives--;
+			if ( this.remainingLives <= 0){
+				this.evtLifeEnded.dispatch(this);
+			}
 			this.evtScoreChanged.dispatch(this);
 		}
 

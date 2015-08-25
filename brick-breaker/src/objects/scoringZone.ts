@@ -11,10 +11,10 @@ namespace _.objects {
 		lives: Phaser.Text;
 		points: Phaser.Text;
 
-		constructor(game: Phaser.Game, initialRemainingLive: number) {
-			super(game)
+		constructor() {
+			super(bb.game)
 
-			var blackLine = this.game.add.tileSprite(0, 0, game.world.width, HEIGHT, images.BACKGROUND_BLACK)
+			var blackLine = this.game.add.tileSprite(0, 0, this.game.world.width, HEIGHT, images.BACKGROUND_BLACK)
 			blackLine.anchor.set(0, 1);
 			blackLine.y = this.game.world.height;
 			

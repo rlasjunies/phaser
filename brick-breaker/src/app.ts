@@ -4,7 +4,7 @@
 namespace _{
     export class Game{
       game: Phaser.Game;
-      public score: Score;
+      score: Score;
     
       constructor(){
         this.game = new Phaser.Game(640, 429, Phaser.AUTO, "phaser_game",{
@@ -12,7 +12,6 @@ namespace _{
       		preload: this.preload});
     
         this.score = new _.Score();     
-        console.log("Game.constructor");
       }
       
       preload(){

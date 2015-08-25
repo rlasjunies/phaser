@@ -10,8 +10,8 @@ namespace _.objects {
 		
 		evtOutOfBounds:Phaser.Signal;
 		
-		constructor(game: Phaser.Game, x: number, y: number) {
-			super(game, x, y, images.BALL, 0);
+		constructor() {
+			super(bb.game, 0, 0, images.BALL, 0);
 			this.isShot = false;
 			this.initialVelocityX = 200;
 			this.initialVelocityY = -300
@@ -29,7 +29,7 @@ namespace _.objects {
 			this.evtOutOfBounds = new Phaser.Signal();
 		}
 
-		outOfBounds = (ball) => { 
+		outOfBounds = (ball:Ball) => { 
 			this.evtOutOfBounds.dispatch(ball);
 		}
 
@@ -56,6 +56,15 @@ namespace _.objects {
 		
 		hitPaddle = (ball: objects.Ball, paddle: Phaser.Sprite) => {
 			sounds.hitPaddle();
+		}
+		
+		resetBall(paddle:Paddle){
+			this.x = paddle.x;
+			this.y = paddle.y - paddle.height * 2;
+			this.isShot = false;
+
+			var body = <Phaser.Physics.Arcade.Body>this.body;
+			body.velocity.set(0);
 		}
 	}
 }

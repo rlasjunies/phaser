@@ -7,10 +7,14 @@ var _;
             this.totalPoints = 0;
             this.initialRemainingLives = 1;
             this.evtScoreChanged = new Phaser.Signal();
+            this.evtLifeEnded = new Phaser.Signal();
             this.reinitialize();
         }
-        Score.prototype.loseLife = function () {
+        Score.prototype.looseLife = function () {
             this.remainingLives--;
+            if (this.remainingLives <= 0) {
+                this.evtLifeEnded.dispatch(this);
+            }
             this.evtScoreChanged.dispatch(this);
         };
         Score.prototype.hitBrick = function () {
@@ -48,6 +52,8 @@ var images;
     images.LOGO = "logo";
     images.START = "start";
     images.BACK = "back";
+    images.PROGRESS_VOID = "progresVoid";
+    images.PRGRESS_FULL = "progressFull";
     function loadImages() {
         bb.game.load.image(images.PADDLE, 'img/paddle.png');
         bb.game.load.image(images.BRICKGREEN, 'img/brick_green.png');
@@ -123,11 +129,11 @@ var _;
     (function (objects) {
         var Paddle = (function (_super) {
             __extends(Paddle, _super);
-            function Paddle(game, x, y) {
-                this.game = game;
+            function Paddle() {
+                this.game = bb.game;
                 this.paddleVelX = 500 / 1000;
                 this.prevX = this.game.input.x;
-                _super.call(this, game, x, y, images.PADDLE, 0);
+                _super.call(this, bb.game, 0, 0, images.PADDLE, 0);
                 this.anchor.set(0.5, 1.0);
                 this.paddleHalf = this.width / 2;
                 this.game.physics.arcade.enable(this);
@@ -155,6 +161,10 @@ var _;
                     this.x = this.game.world.width - this.paddleHalf;
                 }
             };
+            Paddle.prototype.resetPaddle = function () {
+                this.x = this.game.world.centerX;
+                this.y = this.game.world.height - this.height;
+            };
             return Paddle;
         })(Phaser.Sprite);
         objects.Paddle = Paddle;
@@ -168,9 +178,9 @@ var _;
     (function (objects) {
         var Ball = (function (_super) {
             __extends(Ball, _super);
-            function Ball(game, x, y) {
+            function Ball() {
                 var _this = this;
-                _super.call(this, game, x, y, images.BALL, 0);
+                _super.call(this, bb.game, 0, 0, images.BALL, 0);
                 this.outOfBounds = function (ball) {
                     _this.evtOutOfBounds.dispatch(ball);
                 };
@@ -204,6 +214,13 @@ var _;
                 this.events.onOutOfBounds.add(this.outOfBounds, this);
                 this.evtOutOfBounds = new Phaser.Signal();
             }
+            Ball.prototype.resetBall = function (paddle) {
+                this.x = paddle.x;
+                this.y = paddle.y - paddle.height * 2;
+                this.isShot = false;
+                var body = this.body;
+                body.velocity.set(0);
+            };
             return Ball;
         })(Phaser.Sprite);
         objects.Ball = Ball;
@@ -220,9 +237,9 @@ var _;
         var POINTS = " points";
         var ScoringPanel = (function (_super) {
             __extends(ScoringPanel, _super);
-            function ScoringPanel(game, initialRemainingLive) {
-                _super.call(this, game);
-                var blackLine = this.game.add.tileSprite(0, 0, game.world.width, HEIGHT, images.BACKGROUND_BLACK);
+            function ScoringPanel() {
+                _super.call(this, bb.game);
+                var blackLine = this.game.add.tileSprite(0, 0, this.game.world.width, HEIGHT, images.BACKGROUND_BLACK);
                 blackLine.anchor.set(0, 1);
                 blackLine.y = this.game.world.height;
                 //Text
@@ -259,6 +276,66 @@ var _;
 /// <reference path="../../typings/app.d.ts"/>
 var _;
 (function (_) {
+    var objects;
+    (function (objects) {
+        var Bricks = (function (_super) {
+            __extends(Bricks, _super);
+            function Bricks() {
+                _super.call(this, bb.game);
+                this.numCols = 10;
+                this.numRows = 4;
+                //this.bricks = this.game.add.group();
+                var brickImage = [
+                    images.BRICKGREEN,
+                    images.BRICKPURPLE,
+                    images.BRICKRED,
+                    images.BRICKYELLOW
+                ];
+                this.enableBody = true;
+                this.physicsBodyType = Phaser.Physics.ARCADE;
+                for (var rowIndex = 0; rowIndex < this.numRows; rowIndex++) {
+                    var img = brickImage[rowIndex];
+                    for (var colIndex = 0; colIndex < this.numCols; colIndex++) {
+                        var brick = this.create(0, 0, img);
+                        var bodyBrick = brick.body;
+                        bodyBrick.immovable = true;
+                        brick.x = brick.width * colIndex;
+                        brick.y = brick.height * rowIndex;
+                    }
+                }
+            }
+            return Bricks;
+        })(Phaser.Group);
+        objects.Bricks = Bricks;
+    })(objects = _.objects || (_.objects = {}));
+})(_ || (_ = {}));
+/// <reference path="../../typings/tsd.d.ts"/>
+/// <reference path="../../typings/app.d.ts"/>
+var _;
+(function (_) {
+    var objects;
+    (function (objects) {
+        var Background = (function (_super) {
+            __extends(Background, _super);
+            //background:Phaser.TileSprite
+            function Background() {
+                _super.call(this, bb.game, 0, 0, bb.game.world.width, bb.game.world.height, images.BACKGROUND_BLUE);
+                // var w = this.game.world.width;
+                // var h = this.game.world.height;
+                // this.bkg = this.game.add.tileSprite(0, 0, w, h, images.BACKGROUND_BLUE)
+            }
+            Background.prototype.update = function () {
+                this.tilePosition.y += 1;
+            };
+            return Background;
+        })(Phaser.TileSprite);
+        objects.Background = Background;
+    })(objects = _.objects || (_.objects = {}));
+})(_ || (_ = {}));
+/// <reference path="../../typings/tsd.d.ts"/>
+/// <reference path="../../typings/app.d.ts"/>
+var _;
+(function (_) {
     var states;
     (function (states) {
         function goToMain() {
@@ -288,68 +365,36 @@ var _;
             __extends(Main, _super);
             function Main() {
                 _super.call(this);
-                this.numCols = 10;
-                this.numRows = 4;
-                this.remainingLives = 1;
-                this.totalPoints = 0;
             }
             Main.prototype.create = function () {
-                this.game.physics.startSystem(Phaser.Physics.ARCADE);
-                this.game.physics.arcade.checkCollision.down = false;
+                bb.game.physics.startSystem(Phaser.Physics.ARCADE);
+                bb.game.physics.arcade.checkCollision.down = false;
                 //TileSprite
-                var w = this.game.world.width;
-                var h = this.game.world.height;
-                this.bkg = this.game.add.tileSprite(0, 0, w, h, images.BACKGROUND_BLUE);
-                //Paddle
-                this.paddle = this.game.add.existing(new _.objects.Paddle(this.game, 0, 0));
-                //Ball
-                this.ball = this.game.add.existing(new _.objects.Ball(this.game, 0, 0));
+                //var w = this.game.world.width;
+                //var h = this.game.world.height;
+                this.bkg = this.game.add.existing(new _.objects.Background()); //this.game.add.tileSprite(0, 0, w, h, images.BACKGROUND_BLUE)
+                this.paddle = this.game.add.existing(new _.objects.Paddle());
+                this.ball = this.game.add.existing(new _.objects.Ball());
                 this.ball.evtOutOfBounds.add(this.loseLife, this);
-                this.resetPaddle();
-                //Scoring Panel definition			
-                this.scoringPanel = new _.objects.ScoringPanel(this.game, 1);
-                this.bricks = this.game.add.group();
-                var brickImage = [
-                    images.BRICKGREEN,
-                    images.BRICKPURPLE,
-                    images.BRICKRED,
-                    images.BRICKYELLOW
-                ];
-                this.bricks.enableBody = true;
-                this.bricks.physicsBodyType = Phaser.Physics.ARCADE;
-                for (var rowIndex = 0; rowIndex < this.numRows; rowIndex++) {
-                    var img = brickImage[rowIndex];
-                    for (var colIndex = 0; colIndex < this.numCols; colIndex++) {
-                        var brick = this.bricks.create(0, 0, img);
-                        var bodyBrick = brick.body;
-                        bodyBrick.immovable = true;
-                        brick.x = brick.width * colIndex;
-                        brick.y = brick.height * rowIndex;
-                    }
-                }
+                this.scoringPanel = new _.objects.ScoringPanel();
+                this.bricks = new _.objects.Bricks();
+                this.reset();
                 this.game.input.onDown.add(this.ball.shootBall, this);
-                //Sounds
+                bb.score.evtLifeEnded.add(this.endGame, this);
                 _.sounds.init();
             };
             Main.prototype.removeBrick = function (ball, brick) {
                 brick.kill();
-                this.totalPoints += 10;
-                //TODO this.points.text = this.totalPoints + constant.POINTS;
                 bb.score.hitBrick();
                 _.sounds.hitBrick();
             };
-            Main.prototype.goToOver = function () {
+            Main.prototype.endGame = function () {
                 _.sounds.backgroundStop();
                 this.game.state.start(states.STATES_GAME_OVER);
             };
             Main.prototype.loseLife = function () {
-                this.resetPaddle();
-                this.remainingLives--;
-                if (this.remainingLives <= 0) {
-                    this.goToOver();
-                }
-                //TODO this.lives.text = constant.LIVES + this.remainingLives;
-                bb.score.loseLife();
+                this.reset();
+                bb.score.looseLife();
             };
             Main.prototype.update = function () {
                 this.game.physics.arcade.collide(this.ball, this.paddle, this.ball.hitPaddle, null, this);
@@ -361,14 +406,9 @@ var _;
                     this.ball.shootBall();
                 }
             };
-            Main.prototype.resetPaddle = function () {
-                this.paddle.x = this.game.world.centerX;
-                this.paddle.y = this.game.world.height - this.paddle.height;
-                this.ball.x = this.paddle.x;
-                this.ball.y = this.paddle.y - this.paddle.height * 2;
-                this.ball.isShot = false;
-                var body = this.ball.body;
-                body.velocity.set(0);
+            Main.prototype.reset = function () {
+                this.paddle.resetPaddle();
+                this.ball.resetBall(this.paddle);
             };
             return Main;
         })(Phaser.State);
@@ -388,6 +428,8 @@ var _;
                 _super.call(this);
             }
             Intro.prototype.preload = function () {
+                //bb.game.load.image( images.PROGRESS_VOID, "img/progress_void.png");
+                bb.game.load.image(images.PROGRESS_FULL, "img/progress_full.png");
                 images.loadImages();
                 _.sounds.loadSounds();
             };
@@ -472,7 +514,6 @@ var _;
                 create: this.create,
                 preload: this.preload });
             this.score = new _.Score();
-            console.log("Game.constructor");
         }
         Game.prototype.preload = function () {
             _.states.loadStates();
