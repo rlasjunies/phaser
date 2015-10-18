@@ -17,12 +17,10 @@ namespace _.states {
 		}
 
 		create() {
-			bb.game.physics.startSystem(Phaser.Physics.ARCADE);
-			bb.game.physics.arcade.checkCollision.down = false;
+			bb.physics.startSystem(Phaser.Physics.ARCADE);
+			bb.physics.arcade.checkCollision.down = false;
 
 			//TileSprite
-			//var w = this.game.world.width;
-			//var h = this.game.world.height;
 			this.bkg = this.game.add.existing(new objects.Background()); //this.game.add.tileSprite(0, 0, w, h, images.BACKGROUND_BLUE)
 			this.paddle = this.game.add.existing(new objects.Paddle())
 			this.ball = this.game.add.existing(new objects.Ball());
@@ -32,9 +30,15 @@ namespace _.states {
 			
 			this.reset();
 
-			this.game.input.onDown.add(this.ball.shootBall, this);
+			bb.input.onDown.add(this.ball.shootBall, this);
 			bb.score.evtLifeEnded.add(this.endGame, this);			
 			sounds.init();
+			
+			bb.scale.setShowAll();
+bb.scale.pageAlignHorizontally = true;
+bb.scale.pageAlignVeritcally = true;
+bb.scale.refresh();
+
 		}
 
 		removeBrick(ball: objects.Ball, brick: Phaser.Sprite) {

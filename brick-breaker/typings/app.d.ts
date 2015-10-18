@@ -1,3 +1,6 @@
+/// <reference path="../src/core/utils/screenUtil.ts" />
+/// <reference path="../src/core/game.ts" />
+
 /// <reference path="../src/scoring.ts" />
 /// <reference path="../src/app.ts" />
 

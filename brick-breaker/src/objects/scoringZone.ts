@@ -12,7 +12,7 @@ namespace _.objects {
 		points: Phaser.Text;
 
 		constructor() {
-			super(bb.game)
+			super(bb)
 
 			var blackLine = this.game.add.tileSprite(0, 0, this.game.world.width, HEIGHT, images.BACKGROUND_BLACK)
 			blackLine.anchor.set(0, 1);

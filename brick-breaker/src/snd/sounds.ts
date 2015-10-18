@@ -11,17 +11,17 @@ namespace _.sounds{
 	export let sfxBackgroundMusic: Phaser.Sound;
 
 	export function loadSounds(){
-		bb.game.load.audio(HIT_BRICK, "snd/fx_hit_brick.wav");
-		bb.game.load.audio(HIT_PADDLE, "snd/fx_hit_paddle.wav");
-		bb.game.load.audio(BACKGROUND,"snd/bgm_electric_air.ogg");
+		bb.load.audio(HIT_BRICK, "snd/fx_hit_brick.wav");
+		bb.load.audio(HIT_PADDLE, "snd/fx_hit_paddle.wav");
+		bb.load.audio(BACKGROUND,"snd/bgm_electric_air.ogg");
 	}
 	
 	export function init(){
-		sfxHitBrick = bb.game.add.audio(sounds.HIT_BRICK);
+		sfxHitBrick = bb.add.audio(sounds.HIT_BRICK);
 		sfxHitBrick.volume = 1;
-		sfxHitPaddle = bb.game.add.audio(sounds.HIT_PADDLE);
+		sfxHitPaddle = bb.add.audio(sounds.HIT_PADDLE);
 		sfxHitPaddle.volume = 1
-		sfxBackgroundMusic = bb.game.add.audio(sounds.BACKGROUND);
+		sfxBackgroundMusic = bb.add.audio(sounds.BACKGROUND);
 		sfxBackgroundMusic.volume = 1;
 	}
 	

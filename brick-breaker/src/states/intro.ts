@@ -47,6 +47,11 @@ namespace _.states{
 			btnStart.anchor.x = .5;
 			btnStart.x = this.game.world.centerX;
 			btnStart.y = this.game.world.centerY;
+			
+bb.scale.setShowAll();
+bb.scale.pageAlignHorizontally = true;
+bb.scale.pageAlignVeritcally = true;
+bb.scale.refresh();
 		}
 		
 		update(){

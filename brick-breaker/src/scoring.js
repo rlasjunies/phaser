@@ -1,22 +1,20 @@
 /// <reference path="../typings/tsd.d.ts"/>
 /// <reference path="../typings/app.d.ts"/>
-(function (deps, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
-    }
-    else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
-    }
-})(["require", "exports"], function (require, exports) {
+var _;
+(function (_) {
     var Score = (function () {
         function Score() {
             this.totalPoints = 0;
             this.initialRemainingLives = 1;
             this.evtScoreChanged = new Phaser.Signal();
+            this.evtLifeEnded = new Phaser.Signal();
             this.reinitialize();
         }
-        Score.prototype.loseLife = function () {
+        Score.prototype.looseLife = function () {
             this.remainingLives--;
+            if (this.remainingLives <= 0) {
+                this.evtLifeEnded.dispatch(this);
+            }
             this.evtScoreChanged.dispatch(this);
         };
         Score.prototype.hitBrick = function () {
@@ -29,5 +27,5 @@
         };
         return Score;
     })();
-    exports.Score = Score;
-});
+    _.Score = Score;
+})(_ || (_ = {}));

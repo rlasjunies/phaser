@@ -7,7 +7,7 @@ namespace _.objects{
 		private numRows: number = 4;
 
 		constructor(){
-			super(bb.game);
+			super(bb);
 		
 			//this.bricks = this.game.add.group();
 			let brickImage = [

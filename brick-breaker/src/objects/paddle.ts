@@ -19,8 +19,8 @@ namespace _.objects{
 		private touchMove: number = 0;
 
 		constructor(){
-			super(bb.game,0,0, images.PADDLE,0);
-			this.game = bb.game;
+			super(bb,0,0, images.PADDLE,0);
+			this.game = bb;
 
 			this.paddleVelX = 500 / 1000;
 			this.prevX = this.game.input.x;
@@ -47,9 +47,9 @@ namespace _.objects{
 			}
 			this.prevX = this.game.input.x;
 
-			// if ( bb.game.device.touch && this.touchActive){
+			// if ( bb.device.touch && this.touchActive){
 			// 	this.touchOldX = this.touchNewX;
-			// 	this.touchNewX = bb.game.input.x;
+			// 	this.touchNewX = bb.input.x;
 			// 	this.touchMove = 0;
 			// 	if ( this.touchOldX != undefined && this.touchNewX !=undefined){
 			// 		this.touchMove = this.touchNewX - this.touchOldX;

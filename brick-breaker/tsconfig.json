@@ -1,5 +1,10 @@
 {
 	"compilerOptions": {
 		"module": "umd"
-	}
+	},
+	"exclude":[
+		"node_modules",
+		"www"
+	]
+
 }

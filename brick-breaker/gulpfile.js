@@ -3,7 +3,7 @@ var ts = require("gulp-typescript");
 
 var config = {
     tsFiles: "./src/**/*.ts",
-    outputPath: "./src",
+    outputPath: "./www",
     tsDefinitions: "./typings/**/*.d.ts",
     tscConf: {
         target: "ES5",

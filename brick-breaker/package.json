@@ -11,6 +11,10 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-typescript": "^2.8.1",
+    "http-server": "^0.8.5",
     "tsd": "^0.6.3"
+  },
+  "dependencies": {
+    "phaser": "^2.4.4"
   }
 }

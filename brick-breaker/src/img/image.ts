@@ -18,16 +18,16 @@ namespace images {
 	export const PRGRESS_FULL = "progressFull";
 	
 	export function loadImages() {
-		bb.game.load.image(PADDLE, 'img/paddle.png');
-		bb.game.load.image(BRICKGREEN, 'img/brick_green.png');
-		bb.game.load.image(BRICKPURPLE, 'img/brick_purple.png');
-		bb.game.load.image(BRICKRED, 'img/brick_red.png');
-		bb.game.load.image(BRICKYELLOW, 'img/brick_yellow.png');
-		bb.game.load.image(BALL, 'img/ball.png');
-		bb.game.load.image(BACKGROUND_BLACK, 'img/bg_black.png');
-		bb.game.load.image(BACKGROUND_BLUE, 'img/bg_blue.png');
-		bb.game.load.image(LOGO, 'img/logo_game.png');		
-		bb.game.load.spritesheet(START, "img/btn_start.png", 190, 49);
-		bb.game.load.spritesheet(BACK, "img/btn_back.png", 190, 49);
+		bb.load.image(PADDLE, 'img/paddle.png');
+		bb.load.image(BRICKGREEN, 'img/brick_green.png');
+		bb.load.image(BRICKPURPLE, 'img/brick_purple.png');
+		bb.load.image(BRICKRED, 'img/brick_red.png');
+		bb.load.image(BRICKYELLOW, 'img/brick_yellow.png');
+		bb.load.image(BALL, 'img/ball.png');
+		bb.load.image(BACKGROUND_BLACK, 'img/bg_black.png');
+		bb.load.image(BACKGROUND_BLUE, 'img/bg_blue.png');
+		bb.load.image(LOGO, 'img/logo_game.png');		
+		bb.load.spritesheet(START, "img/btn_start.png", 190, 49);
+		bb.load.spritesheet(BACK, "img/btn_back.png", 190, 49);
 	}
 }

@@ -11,7 +11,7 @@ namespace _.objects {
 		evtOutOfBounds:Phaser.Signal;
 		
 		constructor() {
-			super(bb.game, 0, 0, images.BALL, 0);
+			super(bb, 0, 0, images.BALL, 0);
 			this.isShot = false;
 			this.initialVelocityX = 200;
 			this.initialVelocityY = -300

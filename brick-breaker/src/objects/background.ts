@@ -7,7 +7,7 @@ namespace _.objects {
 	export class Background extends Phaser.TileSprite{
 		//background:Phaser.TileSprite
 		constructor(){
-			super(bb.game,0,0,bb.game.world.width, bb.game.world.height, images.BACKGROUND_BLUE);
+			super(bb,0,0,bb.world.width, bb.world.height, images.BACKGROUND_BLUE);
 			
 			// var w = this.game.world.width;
 			// var h = this.game.world.height;
