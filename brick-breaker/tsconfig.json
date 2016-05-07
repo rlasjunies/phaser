@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
-		"module": "umd"
+		"module": "system",
+		"outFile": "./www/app.js"
 	},
 	"exclude":[
 		"node_modules",
